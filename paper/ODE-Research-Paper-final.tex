@@ -35,7 +35,7 @@
 % Author metadata
 \title{An Inverse Riccati Construction of Second-Order Linear ODEs from Degree-2 Algebraic Extensions}
 \author{Kevin D. Potter\footnote{Saint Leo Alumni; Potter's Quill Publishing; development and operation of the Brodie Foxworth AI research agent.}}
-\date{July 5, 2026}
+\date{Revised July 2026}
 
 \begin{document}
 
@@ -261,7 +261,7 @@ All computational checks pass. The SymPy verification is consistent with the for
 
 \section{Outline of an \(n\)-Pole Generalization}
 
-The construction extends formally to \(n\) poles at \(z_1, \dots, z_n\) with residues \(a_i = n_i/4\), where each \(n_i\) is odd. The framework is
+The construction extends formally to \(n\) poles at pairwise distinct locations \(z_1, \dots, z_n \in \mathbb{C}\) with residues \(a_i = n_i/4\), where each \(n_i\) is odd. The framework is
 \begin{align}
 A(z) &= \sum_{i=1}^{n} \frac{a_i}{z-z_i}, \quad a_i = \frac{n_i}{4}, \quad n_i \in \{1, 3, 5, \dots\} \\
 \exp\left(-2\int A\,dz\right) &= \prod_{i=1}^{n} (z-z_i)^{-2a_i} = \prod_{i=1}^{n} (z-z_i)^{-n_i/2}.
@@ -302,7 +302,7 @@ B^2R = c^2 f(z)^2 \cdot \frac{\prod_{i=1}^{n}(z-z_i)^{-n_i}}{f(z)^2} = c^2\prod_
 \end{equation}
 Thus this parametrization does not produce distinct ODE coefficients as \(f\) varies; the essential parameters are the pole locations \(z_i\), the odd integers \(n_i\), and the constant \(c\).
 
-The ODE coefficient is \(r(z) = -(A' + A^2 + B^2R)\), which depends on \(c^2\) through the \(B^2R\) term. For \(c \in \mathbb{C}^{\times}\), the logarithmic derivatives lie in a quadratic extension and have degree exactly~2; the value \(c=0\) is a degenerate rational case with \(s=A\in\mathbb{C}(z)\). For the two-pole case with general \(c\), this yields the one-parameter family
+The ODE coefficient is \(r(z) = -(A' + A^2 + B^2R)\), which depends on \(c^2\) through the \(B^2R\) term. For \(c \in \mathbb{C}^{\times}\), the logarithmic derivatives lie in a quadratic extension and have degree exactly~2; the value \(c=0\) is a degenerate rational case with \(s=A\in\mathbb{C}(z)\). Because the \(z_i\) are distinct and each \(n_i\) is odd, \(R\) has odd valuation at every \(z_i\) and therefore is not a square in \(\mathbb{C}(z)\), which ensures the degree is exactly~2 for \(c\neq 0\). For the two-pole case with general \(c\), this yields the one-parameter family
 \begin{equation}
 r_c(z) = \frac{3}{16z^2} + \frac{3}{16(z-1)^2} - \frac{1/8 + c^2}{z(z-1)} = \frac{4(1-4c^2)z(z-1) + 3}{16z^2(z-1)^2}.
 \end{equation}

@@ -85,18 +85,24 @@ assert ode_check_2 == 0, f"ODE check for y2 failed: {ode_check_2}"
 print("   ✓ Both solutions satisfy y'' + r(z)y = 0")
 print()
 
-# --- 6. Wronskian (W^2 = 1 via algebraic identity) ---
+# --- 6. Wronskian (W^2 = 1 via algebraic identities) ---
 W = sp.simplify(y1 * sp.diff(y2, z) - sp.diff(y1, z) * y2)
 print("6. Wronskian W(y1, y2):", W)
-# W is branch-sensitive in explicit form. Use the algebraic identity:
-#   y1*y2 = [z(z-1)]^(1/2) * (uv)^(1/2) = ±sqrt(z(z-1))
-#   s_- - s_+ = -1/sqrt(z(z-1))
-#   W = y1*y2*(s_- - s_+) = ±1
-# So W^2 = z(z-1) * (s_- - s_+)^2 should be identically 1
-W_squared = sp.simplify((z*(z-1)) * (s_minus - s_plus)**2)
-print(f"   W^2 = z(z-1)*(s_- - s_+)^2 = {W_squared}")
-assert W_squared == 1, f"W^2 should be 1, got {W_squared}"
-print("   ✓ W^2 = 1 (branch-aware: W = ±1, constant and nonzero)")
+# Chain of identities:
+#   (y1*y2)^2 = z(z-1)  [from uv=1 where u=2z-1+2√(z(z-1)), v=2z-1-2√(z(z-1))]
+#   s_- - s_+ = -1/√(z(z-1))
+#   W = y1*y2*(s_- - s_+)  →  W^2 = z(z-1) * (s_- - s_+)^2 = 1
+# First assert uv = 1
+u = 2*z - 1 + 2*sp.sqrt(z*(z-1))
+v = 2*z - 1 - 2*sp.sqrt(z*(z-1))
+uv = sp.simplify(u * v)
+print(f"   u*v = {uv}")
+assert uv == 1, f"u*v should be 1, got {uv}"
+# Then assert W^2 = 1
+wronskian_squared_from_identity = sp.simplify((z*(z-1)) * (s_minus - s_plus)**2)
+print(f"   W^2 = z(z-1)*(s_- - s_+)^2 = {wronskian_squared_from_identity}")
+assert wronskian_squared_from_identity == 1, f"W^2 should be 1, got {wronskian_squared_from_identity}"
+print("   ✓ uv=1 and W^2=1 (branch-aware: W = ±1, constant and nonzero)")
 print()
 
 # --- 7. Ratio y1/y2 is nonconstant (via u' ≠ 0) ---
@@ -105,10 +111,8 @@ print("7. y1/y2 =", ratio)
 # Formal proof: y1/y2 = ±u where u = 2z-1+2√(z(z-1)), nonconstant
 dratio = sp.simplify(sp.diff(ratio, z))
 print("   d/dz(y1/y2) =", dratio)
-# Stronger check: u is nonconstant
-u = 2*z - 1 + 2*sp.sqrt(z*(z-1))
+# u already defined in check 6; verify u' ≠ 0
 du = sp.simplify(sp.diff(u, z))
-print(f"   u = {u}")
 print(f"   u' = {du}")
 assert not sp.simplify(du).equals(0), "u' = 0 — linear independence failed!"
 print("   ✓ u' ≠ 0 → u nonconstant → y1/y2 nonconstant → linearly independent")
