@@ -12,7 +12,7 @@ Verifies:
   6. Wronskian W(y1, y2) is nonzero (constant)
   7. Ratio y1/y2 is nonconstant
 
-Author: Brodie Foxworth, Mark F. Kruelle, Kevin D. Potter
+Author: Kevin D. Potter
 """
 
 import sympy as sp
