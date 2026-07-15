@@ -1,8 +1,7 @@
 # A Two-Pole Construction of Second-Order Linear ODEs with Degree-2 Liouvillian Solutions
 
 This repository contains the manuscript, LaTeX source, and symbolic
-verification code for the paper by Brodie Foxworth, Mark F. Kruelle,
-and Kevin D. Potter.
+verification code for the paper by Kevin D. Potter.
 
 ## Contents
 
