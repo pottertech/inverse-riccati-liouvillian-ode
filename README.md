@@ -6,13 +6,14 @@ verification code for the paper by Kevin D. Potter.
 ## Contents
 
 - `paper/` — manuscript source (`ODE-Research-Paper-final.tex`) and compiled PDF
-- `code/verify.py` — SymPy verification of all key identities in the paper
+- `code/verify.py` — SymPy verification of key identities in the paper
 - `references/` — reference notes
 - `CITATION.cff` — citation metadata
+- `.github/workflows/verify.yml` — automated verification on push
 
 ## Summary
 
-We present a systematic construction of a family of second-order linear ODEs
+We present an explicit two-pole construction of a second-order linear ODE
 
 > y'' + r(z)·y = 0,  where  r(z) = 3/(16z²(z-1)²)
 
@@ -23,7 +24,7 @@ places two poles at z=0 and z=1 with equal residues 1/4.
 ## Running the Verification
 
 ```bash
-pip install sympy
+pip install -r requirements.txt
 python3 code/verify.py
 ```
 

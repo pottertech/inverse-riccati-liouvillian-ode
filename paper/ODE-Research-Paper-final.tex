@@ -42,7 +42,7 @@
 \maketitle
 
 \begin{abstract}
-We present a systematic construction of a family of second-order linear ODEs of the form \(y'' + r(z)y = 0\) whose solutions are Liouvillian and arise from a logarithmic derivative \(s(z) \in \mathbb{C}(z, \sqrt{R})\) of algebraic degree exactly 2 over \(\mathbb{C}(z)\). The construction places two poles at \(z=0\) and \(z=1\) with equal residues \(1/4\), yielding the potential \(r(z) = \frac{3}{16z^2(z-1)^2}\) and solutions expressible in terms of radicals and inverse hyperbolic functions. We verify the Riccati equation by direct computation, prove that the logarithmic derivative has algebraic degree 2 via its minimal polynomial, and establish linear independence of the two fundamental solutions via their nonconstant ratio and constant Wronskian. An outline of an \(n\)-pole generalization is included. We have not found this exact inverse two-pole construction in the standard references consulted.
+We present an explicit two-pole construction of a second-order linear ODE of the form \(y'' + r(z)y = 0\) whose solutions are Liouvillian and arise from a logarithmic derivative \(s(z) \in \mathbb{C}(z, \sqrt{R})\) of algebraic degree exactly 2 over \(\mathbb{C}(z)\). The construction places two poles at \(z=0\) and \(z=1\) with equal residues \(1/4\), yielding the potential \(r(z) = \frac{3}{16z^2(z-1)^2}\) and solutions expressible in terms of radicals and inverse hyperbolic functions. We verify the Riccati equation by direct computation, prove that the logarithmic derivative has algebraic degree 2 via its minimal polynomial, and establish linear independence of the two fundamental solutions via their nonconstant ratio and constant Wronskian. An outline of an \(n\)-pole generalization with a complete irrational cancellation identity is included. We have not found this exact inverse two-pole construction in the standard references consulted.
 \end{abstract}
 
 \section{Introduction}
@@ -76,7 +76,11 @@ A(z) &= \frac{2z-1}{4z(z-1)} = \frac{1}{4z} + \frac{1}{4(z-1)}, \label{eq:defA} 
 R(z) &= \frac{1}{z(z-1)}, \label{eq:defR} \\
 B &= c = \frac{1}{2}. \label{eq:defB}
 \end{align}
-The choice \(B=c=1/2\) is the simplest case of the general framework where \(B=cf(z)\) for some \(f(z) \in \mathbb{C}(z)\). The irrational cancellation condition \(R'/2 + 2AR = 0\) is independent of \(B\). For \(f(z)=1\), this cancellation is an algebraic identity, verified by logarithmic differentiation of \(R = \prod_i (z-z_i)^{-n_i}\). For general \(f(z)\), additional constraints are needed to ensure \(r(z) \in \mathbb{C}(z)\); this case is left for future work. The resulting potential depends on \(B^2\); the choice \(B=1/2\) gives the simple potential used in the two-pole example below. For the simplest subfamily \(f(z)=1\), the constraint gives \(B=c\), a constant. This yields the two branches
+For the explicit two-pole construction we take \(B=c=1/2\), a constant. In this constant-\(B\) case, the irrational part of \(s'+s^2\) vanishes when
+\begin{equation}
+\frac{R'}{2} + 2AR = 0,
+\end{equation}
+which is verified by direct computation in Theorem~1. The resulting potential depends on \(c^2\); the choice \(c=1/2\) gives the simple potential used below. The nonconstant-\(B\) cancellation condition and its \(n\)-pole parametrization are developed in Section~7. This yields the two branches
 \begin{equation}
 s_{\pm}(z) = \frac{2z-1}{4z(z-1)} \pm \frac{1}{2\sqrt{z(z-1)}}. \label{eq:branchesS}
 \end{equation}
@@ -289,7 +293,23 @@ The radicand and coefficient \(B\) are
 R &= \frac{\prod_{i=1}^{n} (z-z_i)^{-n_i}}{f(z)^2} \\
 B &= c f(z).
 \end{align}
-The cancellation condition is independent of $B$, but the resulting potential depends on $B^2$. In the simplest subfamily $f(z)=1$, the parametrization $B=cf(z)$ gives $B=c$, a constant. This recovers the two-pole example treated above. For general $f(z)$ the analysis becomes more involved and is left for future work. When the cancellation condition is satisfied, the ODE coefficient is \(r(z) = -(A' + A^2 + B^2R)\).
+For a general rational coefficient \(B(z)\), the irrational part of \(s'+s^2\), with \(s=A+B\sqrt{R}\), vanishes precisely when
+\begin{equation}
+\frac{B'}{B} + \frac{R'}{2R} + 2A = 0.
+\end{equation}
+Taking
+\begin{equation}
+B = cf(z), \qquad R = \frac{\prod_{i=1}^{n}(z-z_i)^{-n_i}}{f(z)^2}
+\end{equation}
+satisfies this identity identically, because
+\begin{equation}
+\frac{B'}{B} = \frac{f'}{f}, \qquad \frac{R'}{2R} = -2A - \frac{f'}{f},
+\end{equation}
+where the second identity follows from logarithmic differentiation of \(R = \prod_i (z-z_i)^{-n_i} / f(z)^2\). Therefore
+\begin{equation}
+\frac{B'}{B} + \frac{R'}{2R} + 2A = \frac{f'}{f} + \left(-2A - \frac{f'}{f}\right) + 2A = 0.
+\end{equation}
+In the simplest subfamily \(f(z)=1\), one has \(B=c\), a constant, recovering the two-pole example treated above. The ODE coefficient is \(r(z) = -(A' + A^2 + B^2R)\), which depends on \(c^2\) through the \(B^2R\) term, yielding a one-parameter family of potentials indexed by \(c\).
 
 \section{Comparison with Kovacic's Examples}
 
@@ -324,13 +344,13 @@ y_2 &= [z(z-1)]^{1/4}[2z-1 - 2\sqrt{z(z-1)}]^{1/2}
 \end{align}
 The construction was verified by: (i) direct computation of \(r(z)\) from \(-(A' + A^2 + B^2R)\); (ii) proof that \(s\) has algebraic degree exactly 2 via its minimal polynomial; (iii) proof of linear independence via the nonconstant ratio \(y_1/y_2\) and constant nonzero Wronskian \(W=\pm 1\); and (iv) supporting SymPy computational checks.
 
-The \(n\)-pole generalization extends the framework to arbitrary numbers of poles with odd residue parameters, with the simplest subfamily \(f(z)=1\) yielding constant \(B=c\). Further exploration of nonconstant \(f(z)\) and the resulting ODE families is a natural direction for future work.
+The \(n\)-pole generalization extends the framework to arbitrary numbers of poles with odd residue parameters, with the simplest subfamily \(f(z)=1\) yielding constant \(B=c\). Further exploration of nonconstant \(f(z)\) and the resulting ODE coefficients is a natural direction for future work.
 
-\section*{Author Contributions}
-Mark F. Kruelle formulated the initial mathematical question and reviewed the mathematical direction. Kevin D. Potter developed and operated the Brodie Foxworth AI research agent, directed the computational and drafting workflow, reviewed the mathematical claims, and prepared the manuscript. Kevin D. Potter reviewed and approved the final manuscript and accepts responsibility for its content.
+\section*{Acknowledgments}
+The author thanks Mark F. Kruelle for formulating the initial mathematical question and for reviewing the mathematical direction of the work.
 
 \section*{AI Assistance Disclosure}
-Brodie Foxworth, an AI scientific research agent built by Kevin D. Potter, to assist with symbolic exploration, draft organization, LaTeX preparation, computational-check workflow support, and editorial review. Brodie Foxworth is not an author. The human authors reviewed the mathematical claims, computations, citations, and conclusions, and accept full responsibility for the manuscript.
+The author used Brodie Foxworth, an AI scientific research agent built by Kevin D. Potter, to assist with symbolic exploration, draft organization, LaTeX preparation, computational-check workflow support, and editorial review. Brodie Foxworth is not an author. The author reviewed the mathematical claims, computations, citations, and conclusions, and accepts full responsibility for the manuscript.
 
 \newpage
 

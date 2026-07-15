@@ -3,14 +3,19 @@
 SymPy verification for:
   "An Inverse Riccati Construction of Second-Order Linear ODEs from Degree-2 Algebraic Extensions"
 
-Verifies:
+Verifies computationally:
   1. r(z) = 3/(16 z^2 (z-1)^2)  (from A' + A^2 + B^2 R)
   2. Riccati equation: s' + s^2 + r = 0  for both branches s_+, s_-
-  3. Minimal polynomial of s is degree 2 over C(z)
+  3. Minimal polynomial candidate is quadratic in s
   4. Key identity: (2z-1)^2 - 4z(z-1) = 1
   5. ODE check: y'' + r*y = 0  for both solutions y_1, y_2
-  6. Wronskian W(y1, y2) is nonzero (constant)
-  7. Ratio y1/y2 is nonconstant
+  6. Wronskian (via direct computation and logarithmic derivatives)
+  7. Ratio y1/y2 is nonconstant (derivative is nonzero)
+
+Note: Exact algebraic degree 2 (irreducibility of the minimal polynomial)
+requires the proof that R is not a square in C(z), which is established
+in the paper's Theorem 2. The script verifies the polynomial is quadratic
+in s; irreducibility follows from the nonsquare argument in the proof.
 
 Author: Kevin D. Potter
 """
@@ -56,7 +61,8 @@ print("3. Minimal polynomial:", minpoly_simplified)
 poly_in_s = sp.Poly(minpoly_simplified, s)
 print("   Degree in s:", poly_in_s.degree())
 assert poly_in_s.degree() == 2, "Minimal polynomial not degree 2!"
-print("   ✓ Algebraic degree exactly 2")
+print("   ✓ Candidate polynomial is monic and quadratic in s")
+print("   Exact degree 2 additionally uses the proof that R is not a square in C(z)")
 print()
 
 # --- 4. Verify key identity: (2z-1)^2 - 4z(z-1) = 1 ---
@@ -74,20 +80,28 @@ ode_check_1 = sp.simplify(sp.diff(y1, z, 2) + r * y1)
 ode_check_2 = sp.simplify(sp.diff(y2, z, 2) + r * y2)
 print("5. ODE check y1:", sp.simplify(ode_check_1))
 print("   ODE check y2:", sp.simplify(ode_check_2))
-# SymPy may not fully simplify to 0 due to branch cuts, but should be 0
+assert ode_check_1 == 0, f"ODE check for y1 failed: {ode_check_1}"
+assert ode_check_2 == 0, f"ODE check for y2 failed: {ode_check_2}"
 print("   ✓ Both solutions satisfy y'' + r(z)y = 0")
 print()
 
-# --- 6. Wronskian ---
+# --- 6. Wronskian (via logarithmic derivatives: W = y1*y2*(s2 - s1)) ---
 W = sp.simplify(y1 * sp.diff(y2, z) - sp.diff(y1, z) * y2)
 print("6. Wronskian W(y1, y2):", W)
-print("   (Branch-aware: W = ±1, nonzero)")
+# Exact check via logarithmic derivatives
+W_exact = sp.simplify(y1 * y2 * (s_minus - s_plus))
+print("   W via s2-s1:", sp.simplify(W_exact))
+# Abel's identity: W is constant since ODE has no y' term. Direct evaluation gives W = ±1.
+print("   Abel's identity: W is constant (no y' term). Branch-aware: W = ±1, nonzero.")
 print()
 
-# --- 7. Ratio y1/y2 ---
+# --- 7. Ratio y1/y2 is nonconstant ---
 ratio = sp.simplify(y1 / y2)
+dratio = sp.simplify(sp.diff(ratio, z))
 print("7. y1/y2 =", ratio)
-print("   Using uv=1: y1/y2 = u = 2z-1+2√(z(z-1)), which is nonconstant")
+print("   d/dz(y1/y2) =", dratio)
+assert dratio != 0, "y1/y2 is constant — linear independence failed!"
+print("   ✓ Ratio is nonconstant → linearly independent")
 print()
 
 print("=" * 50)
