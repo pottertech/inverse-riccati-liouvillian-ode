@@ -3,14 +3,6 @@ title: "A Two-Pole Construction of Second-Order Linear ODEs with Degree-2 Liouvi
 message: "If you use this work, please cite it as below."
 type: article
 authors:
-  - family-names: Foxworth
-    given-names: Brodie
-    affiliation: "Potter's Quill Publishing"
-    orcid: ""
-  - family-names: Kruelle
-    given-names: "Mark F."
-    affiliation: "Independent researcher"
-    orcid: ""
   - family-names: Potter
     given-names: "Kevin D."
     affiliation: "Potter's Quill Publishing"
@@ -27,10 +19,6 @@ preferred-citation:
   type: article
   title: "A Two-Pole Construction of Second-Order Linear ODEs with Degree-2 Liouvillian Solutions"
   authors:
-    - family-names: Foxworth
-      given-names: Brodie
-    - family-names: Kruelle
-      given-names: "Mark F."
     - family-names: Potter
       given-names: "Kevin D."
   year: 2026
