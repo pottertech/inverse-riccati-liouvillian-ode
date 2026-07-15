@@ -14,7 +14,7 @@ keywords:
   - Riccati equation
   - symbolic computation
 date-released: 2026-07-15
-url: "https://github.com/pottertech/two-pole-liouvillian-ode"
+url: "https://github.com/pottertech/inverse-riccati-liouvillian-ode"
 preferred-citation:
   type: article
   title: "An Inverse Riccati Construction of Second-Order Linear ODEs from Degree-2 Algebraic Extensions"
