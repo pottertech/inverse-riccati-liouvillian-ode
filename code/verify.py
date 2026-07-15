@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 SymPy verification for:
-  "A Two-Pole Construction of Second-Order Linear ODEs with Degree-2 Liouvillian Solutions"
+  "An Inverse Riccati Construction of Second-Order Linear ODEs from Degree-2 Algebraic Extensions"
 
 Verifies:
   1. r(z) = 3/(16 z^2 (z-1)^2)  (from A' + A^2 + B^2 R)

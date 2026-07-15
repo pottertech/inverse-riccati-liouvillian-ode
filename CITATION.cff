@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "A Two-Pole Construction of Second-Order Linear ODEs with Degree-2 Liouvillian Solutions"
+title: "An Inverse Riccati Construction of Second-Order Linear ODEs from Degree-2 Algebraic Extensions"
 message: "If you use this work, please cite it as below."
 type: article
 authors:
@@ -17,7 +17,7 @@ date-released: 2026-07-15
 url: "https://github.com/pottertech/two-pole-liouvillian-ode"
 preferred-citation:
   type: article
-  title: "A Two-Pole Construction of Second-Order Linear ODEs with Degree-2 Liouvillian Solutions"
+  title: "An Inverse Riccati Construction of Second-Order Linear ODEs from Degree-2 Algebraic Extensions"
   authors:
     - family-names: Potter
       given-names: "Kevin D."

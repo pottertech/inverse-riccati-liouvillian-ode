@@ -1,4 +1,4 @@
-# A Two-Pole Construction of Second-Order Linear ODEs with Degree-2 Liouvillian Solutions
+# An Inverse Riccati Construction of Second-Order Linear ODEs from Degree-2 Algebraic Extensions
 
 This repository contains the manuscript, LaTeX source, and symbolic
 verification code for the paper by Kevin D. Potter.
