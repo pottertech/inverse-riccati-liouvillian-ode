@@ -1,5 +1,7 @@
 # An Inverse Riccati Construction of Second-Order Linear ODEs from Degree-2 Algebraic Extensions
 
+[![Verify](https://github.com/pottertech/inverse-riccati-liouvillian-ode/actions/workflows/verify.yml/badge.svg)](https://github.com/pottertech/inverse-riccati-liouvillian-ode/actions/workflows/verify.yml)
+
 This repository contains the manuscript, LaTeX source, and symbolic
 verification code for the paper by Kevin D. Potter.
 

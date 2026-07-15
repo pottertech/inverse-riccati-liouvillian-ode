@@ -58,7 +58,7 @@ A Liouvillian solution of~\eqref{eq:ODE} can be written as \(y_1 = \exp(\int s(z
 \begin{equation}
 s' + s^2 + r(z) = 0.
 \end{equation}
-The algebraic degree of \(s(z)\) over \(\mathbb{C}(z)\) determines the complexity of the solution. Kovacic's algorithm searches for \(s(z)\) of degree 1, 2, 4, or 8 over \(\mathbb{C}(z)\). In this paper we focus on degree-2 solutions, where \(s(z) \in \mathbb{C}(z, \sqrt{R})\) for some square-free \(R \in \mathbb{C}(z)\) with \(\sqrt{R} \notin \mathbb{C}(z)\).
+The algebraic degree of \(s(z)\) over \(\mathbb{C}(z)\) determines the complexity of the solution. Kovacic's algorithm separates the problem into cases according to the possible structure of an algebraic Riccati solution. In this paper we focus on the quadratic case, where \(s(z) \in \mathbb{C}(z, \sqrt{R})\) for some square-free \(R \in \mathbb{C}(z)\) with \(\sqrt{R} \notin \mathbb{C}(z)\).
 
 We present a construction that starts from the desired algebraic structure---a quadratic extension \(\mathbb{C}(z, \sqrt{R})/\mathbb{C}(z)\)---and derives the ODE coefficient \(r(z)\) from the Riccati equation. This is the reverse of the usual approach, which starts from \(r(z)\) and attempts to find \(s(z)\). Our construction naturally produces ODEs with two poles, in contrast to many of the single-pole or single-point examples we encountered in the references consulted within Kovacic's framework.
 
@@ -216,9 +216,9 @@ Additionally, by Abel's identity, the Wronskian is constant because the ODE has 
 
 \section{Computational Verification}
 
-The following SymPy session verifies the key identities computationally. This section is provided for reproducibility and is separate from the formal proofs above.
+The complete executable verification script is available as \texttt{code/verify.py} in the accompanying repository. It includes assertions for all checks below and is run automatically via GitHub Actions on every push. The essential checks are:
 
-\begin{lstlisting}[caption={SymPy Verification Session}]
+\begin{lstlisting}[caption={SymPy Verification (excerpt)}]
 import sympy as sp
 z = sp.Symbol('z')
 
@@ -226,56 +226,38 @@ z = sp.Symbol('z')
 A = (2*z - 1) / (4*z*(z - 1))
 B = sp.Rational(1, 2)
 R = 1 / (z*(z - 1))
-
-# Define s_+ and s_-
 s_plus = A + B * sp.sqrt(R)
 s_minus = A - B * sp.sqrt(R)
 
-# Verify r(z) = -(A' + A^2 + B^2*R)
+# r(z) = -(A' + A^2 + B^2*R)
 r = -(sp.diff(A, z) + A**2 + B**2*R)
-r_simplified = sp.simplify(r)
-print("r(z) =", r_simplified)
-# Output: 3/(16*z**2*(z-1)**2) -- OK
+assert sp.simplify(r - sp.Rational(3,16)/(z**2*(z-1)**2)) == 0
 
-# Verify Riccati: s' + s^2 + r = 0 for both branches
-ric_plus = sp.simplify(sp.diff(s_plus, z) + s_plus**2 + r)
-ric_minus = sp.simplify(sp.diff(s_minus, z) + s_minus**2 + r)
-print("Riccati s+:", ric_plus) # 0 -- OK
-print("Riccati s-:", ric_minus) # 0 -- OK
+# Riccati: s' + s^2 + r = 0 for both branches
+assert sp.simplify(sp.diff(s_plus, z) + s_plus**2 + r) == 0
+assert sp.simplify(sp.diff(s_minus, z) + s_minus**2 + r) == 0
 
-# Verify minimal polynomial
+# Minimal polynomial is quadratic in s
 s = sp.Symbol('s')
-minpoly = s**2 - 2*A*s + (A**2 - B**2*R)
-print("Minimal polynomial:", sp.simplify(minpoly))
-# degree 2 in s -- OK
+assert sp.Poly(sp.simplify(s**2 - 2*A*s + (A**2 - B**2*R)), s).degree() == 2
 
-# Verify key identity: (2z-1)^2 - 4*z*(z-1) = 1
-identity = sp.expand((2*z - 1)**2 - 4*z*(z - 1))
-print("(2z-1)^2 - 4z(z-1) =", identity) # 1 -- OK
+# Key identity: (2z-1)^2 - 4z(z-1) = 1
+assert sp.expand((2*z - 1)**2 - 4*z*(z - 1)) == 1
 
-# Verify solutions
-y1 = (z*(z-1))**sp.Rational(1,4) * \
-     (2*z - 1 + 2*sp.sqrt(z*(z-1)))**sp.Rational(1,2)
-y2 = (z*(z-1))**sp.Rational(1,4) * \
-     (2*z - 1 - 2*sp.sqrt(z*(z-1)))**sp.Rational(1,2)
+# ODE check: y'' + r*y = 0
+y1 = (z*(z-1))**sp.Rational(1,4) * (2*z-1 + 2*sp.sqrt(z*(z-1)))**sp.Rational(1,2)
+y2 = (z*(z-1))**sp.Rational(1,4) * (2*z-1 - 2*sp.sqrt(z*(z-1)))**sp.Rational(1,2)
+assert sp.simplify(sp.diff(y1, z, 2) + r*y1) == 0
+assert sp.simplify(sp.diff(y2, z, 2) + r*y2) == 0
 
-# Check ODE: y'' + r*y = 0
-ode_check_1 = sp.simplify(sp.diff(y1, z, 2) + r * y1)
-ode_check_2 = sp.simplify(sp.diff(y2, z, 2) + r * y2)
-print("ODE check y1:", sp.simplify(ode_check_1)) # 0 -- OK
-print("ODE check y2:", sp.simplify(ode_check_2)) # 0 -- OK
+# Wronskian: W^2 = 1 (branch-aware)
+assert sp.simplify((z*(z-1)) * (s_minus - s_plus)**2) == 1
 
-# Wronskian
-W = sp.simplify(y1 * sp.diff(y2, z) - sp.diff(y1, z) * y2)
-print("Wronskian:", W)
-# Branch-aware simplification gives W = +/- 1 (nonzero) -- OK
-
-# Ratio y1/y2
-ratio = sp.simplify(y1 / y2)
-print("y1/y2 =", ratio)
-# Using uv=1, manual simplification gives y1/y2 = +/- u (nonconstant) -- OK
+# Ratio nonconstancy: u' != 0
+u = 2*z - 1 + 2*sp.sqrt(z*(z-1))
+assert not sp.simplify(sp.diff(u, z)).equals(0)
 \end{lstlisting}
-All computational checks confirm the theoretical results. The SymPy verification is consistent with the formal proofs in Section 5.
+All computational checks pass. The SymPy verification is consistent with the formal proofs in Section~5. Note that exact algebraic degree~2 (irreducibility of the minimal polynomial) relies on the proof that \(R\) is not a square in \(\mathbb{C}(z)\), established in Theorem~2.
 
 \section{Outline of an \(n\)-Pole Generalization}
 
@@ -309,7 +291,22 @@ where the second identity follows from logarithmic differentiation of \(R = \pro
 \begin{equation}
 \frac{B'}{B} + \frac{R'}{2R} + 2A = \frac{f'}{f} + \left(-2A - \frac{f'}{f}\right) + 2A = 0.
 \end{equation}
-In the simplest subfamily \(f(z)=1\), one has \(B=c\), a constant, recovering the two-pole example treated above. The ODE coefficient is \(r(z) = -(A' + A^2 + B^2R)\), which depends on \(c^2\) through the \(B^2R\) term, yielding a one-parameter family of potentials indexed by \(c\).
+In the simplest subfamily \(f(z)=1\), one has \(B=c\), a constant, recovering the two-pole example treated above.
+
+Note that \(f(z)\) is auxiliary: it cancels from both \(B\sqrt{R}\) and \(B^2R\), since
+\begin{equation}
+B\sqrt{R} = cf(z) \cdot \frac{\prod_{i=1}^{n}(z-z_i)^{-n_i/2}}{f(z)} = c\prod_{i=1}^{n}(z-z_i)^{-n_i/2},
+\end{equation}
+\begin{equation}
+B^2R = c^2 f(z)^2 \cdot \frac{\prod_{i=1}^{n}(z-z_i)^{-n_i}}{f(z)^2} = c^2\prod_{i=1}^{n}(z-z_i)^{-n_i}.
+\end{equation}
+Thus this parametrization does not produce distinct ODE coefficients as \(f\) varies; the essential parameters are the pole locations \(z_i\), the odd integers \(n_i\), and the constant \(c\).
+
+The ODE coefficient is \(r(z) = -(A' + A^2 + B^2R)\), which depends on \(c^2\) through the \(B^2R\) term. For the two-pole case with general \(c\), this yields the one-parameter family
+\begin{equation}
+r_c(z) = \frac{3}{16z^2} + \frac{3}{16(z-1)^2} - \frac{1/8 + c^2}{z(z-1)} = \frac{4(1-4c^2)z(z-1) + 3}{16z^2(z-1)^2}.
+\end{equation}
+For \(c=1/2\), the \(z(z-1)\) term vanishes and one recovers \(r(z) = \frac{3}{16z^2(z-1)^2}\).
 
 \section{Comparison with Kovacic's Examples}
 
@@ -344,7 +341,7 @@ y_2 &= [z(z-1)]^{1/4}[2z-1 - 2\sqrt{z(z-1)}]^{1/2}
 \end{align}
 The construction was verified by: (i) direct computation of \(r(z)\) from \(-(A' + A^2 + B^2R)\); (ii) proof that \(s\) has algebraic degree exactly 2 via its minimal polynomial; (iii) proof of linear independence via the nonconstant ratio \(y_1/y_2\) and constant nonzero Wronskian \(W=\pm 1\); and (iv) supporting SymPy computational checks.
 
-The \(n\)-pole generalization extends the framework to arbitrary numbers of poles with odd residue parameters, with the simplest subfamily \(f(z)=1\) yielding constant \(B=c\). Further exploration of nonconstant \(f(z)\) and the resulting ODE coefficients is a natural direction for future work.
+The \(n\)-pole generalization extends the framework to arbitrary numbers of poles with odd residue parameters. The auxiliary function \(f(z)\) enters the parametrization but cancels from the resulting ODE coefficient; the essential parameters are the pole locations, the odd integers \(n_i\), and the constant \(c\). Further exploration of the resulting multi-pole ODE families is a natural direction for future work.
 
 \section*{Acknowledgments}
 The author thanks Mark F. Kruelle for formulating the initial mathematical question and for reviewing the mathematical direction of the work.
