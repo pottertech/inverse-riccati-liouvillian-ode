@@ -34,7 +34,7 @@
 
 % Author metadata
 \title{An Inverse Riccati Construction of Second-Order Linear ODEs from Degree-2 Algebraic Extensions}
-\author{Kevin D. Potter\footnote{Saint Leo Alumni; Potter's Quill Publishing; development and operation of the Brodie Foxworth AI research agent.}}
+\author{Kevin D. Potter\footnote{Saint Leo University alumnus; Potter's Quill Publishing; development and operation of the Brodie Foxworth AI research agent.}}
 \date{Revised July 2026}
 
 \begin{document}
@@ -58,7 +58,7 @@ A Liouvillian solution of~\eqref{eq:ODE} can be written as \(y_1 = \exp(\int s(z
 \begin{equation}
 s' + s^2 + r(z) = 0.
 \end{equation}
-The algebraic degree of \(s(z)\) over \(\mathbb{C}(z)\) determines the complexity of the solution. Kovacic's algorithm separates the problem into cases according to the possible structure of an algebraic Riccati solution. In this paper we focus on the quadratic case, where \(s(z) \in \mathbb{C}(z, \sqrt{R})\) for some square-free \(R \in \mathbb{C}(z)\) with \(\sqrt{R} \notin \mathbb{C}(z)\).
+The algebraic degree of \(s(z)\) over \(\mathbb{C}(z)\) determines the complexity of the solution. Kovacic's algorithm separates the problem into cases according to the possible structure of an algebraic Riccati solution. In this paper we focus on the quadratic case, where \(s(z) \in \mathbb{C}(z, \sqrt{R})\) for some \(R \in \mathbb{C}(z)\) with \(\sqrt{R} \notin \mathbb{C}(z)\).
 
 We present a construction that starts from the desired algebraic structure---a quadratic extension \(\mathbb{C}(z, \sqrt{R})/\mathbb{C}(z)\)---and derives the ODE coefficient \(r(z)\) from the Riccati equation. This is the reverse of the usual approach, which starts from \(r(z)\) and attempts to find \(s(z)\). Our construction naturally produces ODEs with two poles, in contrast to many of the single-pole or single-point examples we encountered in the references consulted within Kovacic's framework.
 
@@ -211,7 +211,7 @@ Set \(u = 2z-1 + 2\sqrt{z(z-1)}\) and \(v = 2z-1 - 2\sqrt{z(z-1)}\). The identit
 \end{equation*}
 Since \(v = 1/u\), this ratio is \(\pm u\), depending on branch choices. But \(u = 2z-1 + 2\sqrt{z(z-1)}\) is a nonconstant algebraic function. Therefore \(y_1/y_2\) is not constant on any open domain where the branches are defined, and \(y_1, y_2\) are linearly independent.
 
-Additionally, by Abel's identity, the Wronskian is constant because the ODE has no \(y'\) term. Direct evaluation gives \(W(y_1, y_2) = \pm 1\), which is constant and nonzero on each branch.
+Additionally, by Abel's identity, the Wronskian is constant because the ODE has no \(y'\) term. For the normalized branches displayed above, direct evaluation gives \(W(y_1, y_2) = \pm 1\), and hence the Wronskian is nonzero.
 \end{proof}
 
 \section{Computational Verification}
