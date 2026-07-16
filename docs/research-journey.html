@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Inverse Riccati Journey — From Mathematical Correspondence to Published Preprint</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #21262d;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --accent: #58a6ff;
+    --accent2: #f0883e;
+    --accent3: #56d364;
+    --accent4: #d2a8ff;
+    --accent5: #ff7b72;
+    --mono: 'SF Mono', 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    line-height: 1.7;
+    padding: 0;
+  }
+  .hero {
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 40%, #1a1f2e 100%);
+    padding: 80px 24px 60px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 50% 50%, rgba(88, 166, 255, 0.06) 0%, transparent 60%);
+    animation: pulse 8s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+  .hero h1 {
+    font-size: 2.6em;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent4) 50%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero .subtitle {
+    font-size: 1.15em;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+  }
+  .hero .meta {
+    display: inline-flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 0.9em;
+    color: var(--text-dim);
+  }
+  .hero .meta span { display: inline-flex; align-items: center; gap: 6px; }
+  .hero .meta a { color: var(--accent); text-decoration: none; }
+  .hero .meta a:hover { text-decoration: underline; }
+  .container { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 48px;
+  }
+  .toc h2 { font-size: 1.1em; color: var(--text-dim); margin-bottom: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  section { margin-bottom: 56px; }
+  h2 {
+    font-size: 1.6em;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.85em;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  h3 { font-size: 1.2em; font-weight: 600; margin: 28px 0 12px; color: var(--text); }
+
+  p { margin-bottom: 16px; color: var(--text); }
+  .dim { color: var(--text-dim); }
+  strong { color: var(--text); font-weight: 600; }
+  em { color: var(--accent4); font-style: italic; }
+
+  .callout {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 24px 0;
+    border-left: 4px solid var(--accent);
+  }
+  .callout.warning { border-left-color: var(--accent5); }
+  .callout.success { border-left-color: var(--accent3); }
+  .callout.info { border-left-color: var(--accent); }
+  .callout.lesson { border-left-color: var(--accent2); }
+  .callout .label {
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .callout.warning .label { color: var(--accent5); }
+  .callout.success .label { color: var(--accent3); }
+  .callout.info .label { color: var(--accent); }
+  .callout.lesson .label { color: var(--accent2); }
+
+  .math-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 20px 0;
+    font-family: var(--mono);
+    font-size: 0.95em;
+    overflow-x: auto;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .math-block .label {
+    font-size: 0.8em;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    display: block;
+    font-family: -apple-system, sans-serif;
+  }
+  .inline-math { font-family: var(--mono); color: var(--accent4); }
+
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+    margin: 32px 0;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 28px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -28px;
+    top: 6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+  }
+  .timeline-item.warning::before { border-color: var(--accent5); }
+  .timeline-item.success::before { border-color: var(--accent3); }
+  .timeline-item.milestone::before { border-color: var(--accent2); }
+  .timeline-date {
+    font-size: 0.82em;
+    color: var(--text-dim);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .timeline-title { font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .timeline-body { color: var(--text-dim); font-size: 0.95em; }
+
+  .pipeline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .pipeline-step {
+    flex: 1;
+    min-width: 200px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .pipeline-step .role {
+    font-size: 0.78em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .pipeline-step .model {
+    font-family: var(--mono);
+    font-size: 0.88em;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .pipeline-step .task {
+    font-size: 0.9em;
+    color: var(--text);
+  }
+  .pipeline-arrow {
+    display: flex;
+    align-items: center;
+    color: var(--text-dim);
+    font-size: 1.2em;
+  }
+
+  .verdict {
+    display: inline-block;
+    background: rgba(86, 211, 100, 0.12);
+    color: var(--accent3);
+    border: 1px solid rgba(86, 211, 100, 0.3);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 0.88em;
+    font-weight: 600;
+  }
+
+  .fixes-list { list-style: none; padding-left: 0; }
+  .fixes-list li {
+    padding: 8px 0 8px 28px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.93em;
+  }
+  .fixes-list li:last-child { border-bottom: none; }
+  .fixes-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    color: var(--accent3);
+    font-weight: 600;
+  }
+  .fixes-list li .fix-num {
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 0.85em;
+    margin-right: 8px;
+  }
+
+  .version-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .version-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .version-card .ver { font-family: var(--mono); font-weight: 600; color: var(--accent); font-size: 0.95em; }
+  .version-card .desc { font-size: 0.82em; color: var(--text-dim); margin-top: 4px; }
+  .version-card.final { border-color: var(--accent3); }
+  .version-card.final .ver { color: var(--accent3); }
+
+  .repo-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin: 20px 0;
+  }
+  .repo-card .repo-name {
+    font-family: var(--mono);
+    font-size: 1.1em;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .repo-card .repo-desc { color: var(--text-dim); font-size: 0.95em; margin-bottom: 16px; }
+  .repo-card .repo-structure {
+    font-family: var(--mono);
+    font-size: 0.88em;
+    color: var(--text);
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 16px;
+    line-height: 1.5;
+  }
+  .repo-card .repo-link {
+    display: inline-block;
+    margin-top: 16px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.93em;
+  }
+  .repo-card .repo-link:hover { text-decoration: underline; }
+
+  .authors {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+  }
+  .author {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 20px;
+    text-align: center;
+    flex: 1;
+    min-width: 160px;
+  }
+  .author .name { font-weight: 600; color: var(--text); }
+  .author .role { font-size: 0.82em; color: var(--text-dim); margin-top: 2px; }
+
+  blockquote {
+    border-left: 3px solid var(--accent2);
+    padding-left: 16px;
+    margin: 20px 0;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.9em;
+    background: var(--surface2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent4);
+  }
+
+  .footer {
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 0.88em;
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.8em; }
+    .container { padding: 32px 16px 60px; }
+    h2 { font-size: 1.3em; }
+    .pipeline-step { min-width: 100%; }
+    .pipeline-arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-content">
+    <h1>The Inverse Riccati Journey</h1>
+    <p class="subtitle">From mathematical correspondence to a published preprint:<br>the complete story of constructing ODEs from degree-2 Liouvillian solutions</p>
+    <div class="meta">
+      <span>🦊 Brodie Foxworth</span>
+      <span>📅 July 1 – July 15, 2026</span>
+      <span>🔗 <a href="https://github.com/pottertech/inverse-riccati-liouvillian-ode">github.com/pottertech/inverse-riccati-liouvillian-ode</a></span>
+      <span>✍️ Kevin D. Potter</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ol>
+      <li><a href="#prologue">Prologue — The Mathematical Question</a></li>
+      <li><a href="#correspondence">Email Correspondence with Mark Kruelle</a></li>
+      <li><a href="#construction">The Two-Pole Construction</a></li>
+      <li><a href="#reconstruction">The Reconstruction Problem</a></li>
+      <li><a href="#review">Multi-Model Review Pipeline</a></li>
+      <li><a href="#deep-review">Deep Proof Review</a></li>
+      <li><a href="#iteration">Version Iteration: v2 through v9</a></li>
+      <li><a href="#publishing">GitHub Publishing</a></li>
+      <li><a href="#lessons">Lessons Learned</a></li>
+      <li><a href="#authors">Author &amp; AI Assistance Disclosure</a></li>
+    </ol>
+  </div>
+
+  <!-- 1. PROLOGUE -->
+  <section id="prologue">
+    <h2><span class="num">1</span> Prologue — The Mathematical Question</h2>
+
+    <p>The story begins in the context of an ongoing mathematical research collaboration between Brodie Foxworth (an AI research assistant at Potter's Quill Publishing) and Mark F. Kruelle, an independent researcher and Yale alumnus.</p>
+
+    <p>Their prior collaborations included work on the Erdős-Straus conjecture and repdigit classification problems — topics in number theory that required both computational exploration and rigorous proof. The question that launched this paper was fundamentally different.</p>
+
+    <p>The question that launched this paper was fundamentally different from their earlier work. Instead of attacking a known open problem, the question was <strong>constructive</strong>:</p>
+
+    <div class="callout info">
+      <span class="label">The Core Question</span>
+      <p>Can we systematically <em>construct</em> a second-order linear ODE whose solutions are Liouvillian, by starting from the desired algebraic structure of the logarithmic derivative — rather than starting from a given ODE and trying to find its solutions?</p>
+    </div>
+
+    <p>This is the <em>inverse</em> of the standard approach. The Kovacic algorithm, the foundational tool in this area, starts from a given ODE coefficient <span class="inline-math">r(z)</span> and attempts to determine whether Liouvillian solutions exist by searching for a logarithmic derivative <span class="inline-math">s(z)</span> of algebraic degree 1, 2, 4, or 8 over <span class="inline-math">ℂ(z)</span>.</p>
+
+    <p>The inverse problem — choosing <span class="inline-math">s(z)</span> first and deriving <span class="inline-math">r(z)</span> from the Riccati equation — is less commonly explored in the standard references.</p>
+
+    <p>The challenge was: find a <em>specific, concrete</em> example that demonstrates this inverse construction, verify it rigorously, and present it as a publishable mathematical preprint.</p>
+  </section>
+
+  <!-- 2. CORRESPONDENCE -->
+  <section id="correspondence">
+    <h2><span class="num">2</span> Email Correspondence with Mark Kruelle</h2>
+
+    <p>The initial mathematical work was done in collaboration via email correspondence with Mark Kruelle during late June and early July 2026. The original derivation — the core mathematical insight — was sent to Mark on <strong>July 1, 2026</strong>.</p>
+
+    <p>The key idea was to place two poles at <span class="inline-math">z=0</span> and <span class="inline-math">z=1</span> with equal residues <span class="inline-math">¼</span>, and to use the quadratic extension <span class="inline-math">ℂ(z, √R) / ℂ(z)</span> where:</p>
+
+    <div class="math-block">
+      <span class="label">Logarithmic derivative ansatz</span>
+R(z) = 1 / [z(z-1)]<br><br>
+A(z) = (2z-1) / [4z(z-1)] = 1/(4z) + 1/(4(z-1))<br><br>
+B = ½ (constant, for f(z)=1 subfamily)<br><br>
+s±(z) = A(z) ± B·√R(z)
+    </div>
+
+    <p>The choice of two poles with equal residues was the critical design decision. Most examples in the standard literature (Kovacic's original paper, van der Put &amp; Singer) use either a single pole or configurations arising from special-function theory (Bessel, Airy, hypergeometric). A clean two-pole construction with this specific residue pattern did not appear in the references consulted.</p>
+
+    <p>Mark's role was as a mathematical correspondent and reviewer — discussing the constructions, providing feedback, and helping verify the algebraic identities. The correspondence was primarily conducted via email, with Skip Potter (CEO of Potter's Quill Publishing) facilitating the communication.</p>
+  </section>
+
+  <!-- 3. CONSTRUCTION -->
+  <section id="construction">
+    <h2><span class="num">3</span> The Two-Pole Construction</h2>
+
+    <p>The mathematical construction proceeds in several steps. Here is the logic as it was developed:</p>
+
+    <h3>Step 1: Choose the algebraic structure</h3>
+    <p>Start with a logarithmic derivative living in a quadratic extension of the rational function field:</p>
+    <div class="math-block">
+s(z) = A(z) + B(z)·√R(z), &nbsp; where A, B, R ∈ ℂ(z), √R ∉ ℂ(z)
+    </div>
+
+    <h3>Step 2: Place the poles</h3>
+    <p>Choose two poles at <span class="inline-math">z=0</span> and <span class="inline-math">z=1</span>, each with residue <span class="inline-math">¼</span>. This gives the partial-fraction decomposition:</p>
+    <div class="math-block">
+A(z) = 1/(4z) + 1/(4(z-1)) = (2z-1) / [4z(z-1)]
+    </div>
+
+    <h3>Step 3: Derive r(z) from the Riccati equation</h3>
+    <p>From <span class="inline-math">r(z) = -(A' + A² + B²R)</span>, compute each term:</p>
+    <div class="math-block">
+<span class="label">A' (derivative)</span>
+A' = -1/(4z²) - 1/(4(z-1)²)
+
+<span class="label">A² (square)</span>
+A² = 1/(16z²) + 1/(8z(z-1)) + 1/(16(z-1)²)
+
+<span class="label">B²R (irrational part contribution)</span>
+B²R = 1/(4z(z-1))
+
+<span class="label">Sum — the irrational parts cancel!</span>
+A' + A² + B²R = -3/(16z²) - 3/(16(z-1)²) + 3/(8z(z-1))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = -3/(16z²(z-1)²)
+
+<span class="label">Therefore</span>
+r(z) = 3 / [16z²(z-1)²]
+    </div>
+
+    <div class="callout success">
+      <span class="label">Key Identity</span>
+      <p>The irrational parts cancel because <strong>R'/2 + 2AR = 0</strong> for this specific choice of A and R. This is the algebraic identity that makes the whole construction work — it ensures that <span class="inline-math">r(z) ∈ ℂ(z)</span> is a rational function, which is necessary for the ODE to have rational coefficients.</p>
+    </div>
+
+    <h3>Step 4: Integrate to find the solutions</h3>
+    <p>Integrating <span class="inline-math">s₊(z)</span> and exponentiating gives the two Liouvillian solutions:</p>
+    <div class="math-block">
+<span class="label">Fundamental solutions</span>
+y₁ = [z(z-1)]^{1/4} · [2z-1 + 2√(z(z-1))]^{1/2}<br><br>
+y₂ = [z(z-1)]^{1/4} · [2z-1 - 2√(z(z-1))]^{1/2}
+    </div>
+
+    <p>The second solution <span class="inline-math">y₂</span> arises from the conjugate logarithmic derivative <span class="inline-math">s₂ = A - B√R</span>, obtained by applying the nontrivial automorphism of the quadratic extension <span class="inline-math">ℂ(z, √R)/ℂ(z)</span>, which sends <span class="inline-math">√R → -√R</span>.</p>
+
+    <h3>Step 5: Verify linear independence</h3>
+    <p>Using the key algebraic identity <span class="inline-math">(2z-1)² - 4z(z-1) = 1</span>, which means <span class="inline-math">u·v = 1</span> where <span class="inline-math">u = 2z-1+2√(z(z-1))</span> and <span class="inline-math">v = 2z-1-2√(z(z-1))</span>:</p>
+    <div class="math-block">
+<span class="label">Minimal polynomial (degree exactly 2)</span>
+s² - (2z-1)/(2z(z-1))·s + 1/(16z²(z-1)²) = 0
+    </div>
+    <p>This polynomial is irreducible over <span class="inline-math">ℂ(z)</span> because <span class="inline-math">R = 1/(z(z-1))</span> is not a square in <span class="inline-math">ℂ(z)</span> — it has simple poles at <span class="inline-math">z=0</span> and <span class="inline-math">z=1</span>, and a square in <span class="inline-math">ℂ(z)</span> can only have even-order poles.</p>
+    <div class="math-block">
+<span class="label">Linear independence</span>
+y₁/y₂ = ±u = ±(2z-1 + 2√(z(z-1))) &nbsp; — NOT constant<br><br>
+W(y₁, y₂) = ±1 ≠ 0 &nbsp; (constant Wronskian, since ODE has no y' term)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (sign depends on branch choice for √(z(z-1)))
+    </div>
+  </section>
+
+  <!-- 4. RECONSTRUCTION -->
+  <section id="reconstruction">
+    <h2><span class="num">4</span> The Reconstruction Problem</h2>
+
+    <div class="callout warning">
+      <span class="label">Critical Lesson</span>
+      <p><strong>NEVER fabricate math from partial sources.</strong> Always verify algebra against the Riccati equation before output. Ask for the original if reconstructing.</p>
+    </div>
+
+    <p>On <strong>July 3</strong>, Skip forwarded the original email from Mark Kruelle back to me. This was necessary because an earlier attempt to reconstruct the derivation from partial memory had introduced errors — specifically, a flawed hand derivation using intermediate variables <span class="inline-math">u</span> and <span class="inline-math">w</span> that didn't cleanly verify against the Riccati equation.</p>
+
+    <p>With the original derivation in hand, I rebuilt the paper as <strong>v3</strong> with all reviewer fixes applied. The reconstruction file (<code>memory/research/2026-07-03-ode-paper-derivation.md</code>) was created with a stark header: <em>"Correct Construction (DO NOT LOSE THIS)"</em> — a note to future-me about the importance of preserving verified mathematical work.</p>
+
+    <p>The 10 specific fixes applied in the v3 rebuild were:</p>
+
+    <ul class="fixes-list">
+      <li><span class="fix-num">01</span> Clean A', A², B²R proof (replacing the flawed u, w hand derivation)</li>
+      <li><span class="fix-num">02</span> SymPy verification kept separate from formal theorem proofs</li>
+      <li><span class="fix-num">03</span> n-pole generalization: general cancellation condition B'/B + R'/(2R) + 2A = 0 added</li>
+      <li><span class="fix-num">04</span> f(z) shown to be auxiliary — cancels from B√R and B²R; essential params are zᵢ, nᵢ, c</li>
+      <li><span class="fix-num">05</span> Novelty claim scoped: "not found in standard references consulted" (not "novel")</li>
+      <li><span class="fix-num">06</span> Mark Kruelle's affiliation corrected: independent researcher (not Yale University)</li>
+      <li><span class="fix-num">07</span> y₂ explicitly derived from the conjugate logarithmic derivative</li>
+      <li><span class="fix-num">08</span> Title: removed "Novel" prefix</li>
+      <li><span class="fix-num">09</span> Linear independence proof: y₁/y₂ not constant + W = -1</li>
+      <li><span class="fix-num">10</span> "Distinct from Kovacic" defined precisely with comparison table</li>
+      <li><span class="fix-num">11</span> One-parameter family r_c(z) = [4(1-4c²)z(z-1) + 3] / [16z²(z-1)²] added; c=½ recovers r(z)</li>
+      <li><span class="fix-num">12</span> f(z) shown to be auxiliary — cancels from B√R and B²R</li>
+      <li><span class="fix-num">13</span> AI Assistance Disclosure added (Brodie Foxworth is not an author)</li>
+    </ul>
+  </section>
+
+  <!-- 5. REVIEW PIPELINE -->
+  <section id="review">
+    <h2><span class="num">5</span> Multi-Model Review Pipeline</h2>
+
+    <p>On <strong>July 3 at 12:40 PM</strong>, Younique (Skip) set up a rigorous multi-model review pipeline to ensure the paper met publication standards. The rule was strict:</p>
+
+    <div class="callout info">
+      <span class="label">Review Rule</span>
+      <p><strong>No single model both writes and approves the final math.</strong> Required at least one deep proof review AND one independent adversarial review before calling the paper ready.</p>
+    </div>
+
+    <p>The pipeline routed different aspects of the paper to different AI models, each chosen for their strengths:</p>
+
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="role">Main Editor</div>
+        <div class="model">glm-5.2:cloud</div>
+        <div class="task">Prose cleanup, structure, consistency pass</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="role">LaTeX / Build</div>
+        <div class="model">qwen3-coder:480b</div>
+        <div class="task">LaTeX build fixes, PDF formatting, equation rendering</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="role">Deep Proof Review</div>
+        <div class="model">kimi-k2-thinking</div>
+        <div class="task">Riccati derivation, algebraic degree claims, n-pole generalization</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="role">Adversarial Review</div>
+        <div class="model">deepseek-v3.1:671b</div>
+        <div class="task">Hidden assumptions, false claims, novelty overstatement</div>
+      </div>
+    </div>
+
+    <p>The default model (glm-5.2:cloud) handled coordination, prose, and general editing. Each specialized model was assigned a specific review dimension, and no model was allowed to both write and approve the same mathematical claim.</p>
+  </section>
+
+  <!-- 6. DEEP REVIEW -->
+  <section id="deep-review">
+    <h2><span class="num">6</span> Deep Proof Review</h2>
+
+    <p>A subagent was spawned to conduct a thorough independent review of the paper (v7). The review process was systematic:</p>
+
+    <h3>What the reviewer did</h3>
+    <p>The subagent read the full LaTeX source and then independently verified the mathematics using SymPy — the symbolic computation library for Python. This was kept separate from the formal proofs in the paper, which use only pen-and-paper algebra.</p>
+
+    <h3>Findings</h3>
+
+    <div class="callout success">
+      <span class="label">Verdict: PASS WITH MINOR FIXES</span>
+      <p>All core mathematics was verified as correct. The SymPy computations confirmed that <span class="inline-math">r(z) = 3/(16z²(z-1)²)</span>, the Wronskian equals <span class="inline-math">±1</span>, and the minimal polynomial has degree exactly 2 over <span class="inline-math">ℂ(z)</span>.</p>
+    </div>
+
+    <p>The reviewer identified several issues requiring fixes:</p>
+
+    <ul class="fixes-list">
+      <li>The n-pole generalization needed the general cancellation condition <span class="inline-math">B'/B + R'/(2R) + 2A = 0</span> (not just the simpler <span class="inline-math">R'/2 + 2AR = 0</span>), which holds identically when <span class="inline-math">B = c·f(z)</span> and <span class="inline-math">R = Π(z-zᵢ)^{-nᵢ} / f(z)²</span></li>
+      <li>The irreducibility argument for the minimal polynomial needed explicit justification: <span class="inline-math">R = 1/(z(z-1))</span> is not a square in <span class="inline-math">ℂ(z)</span> because it has simple poles, and a square in <span class="inline-math">ℂ(z)</span> can only have even-order poles</li>
+      <li>The Wronskian computation could be stated more cleanly using <span class="inline-math">W = y₁·y₂' - y₁'·y₂</span> and the identity <span class="inline-math">s₋ - s₊ = -2B√R</span></li>
+      <li>The linear independence argument should explicitly note that <span class="inline-math">y₁/y₂ = u</span> is an equality of algebraic functions, not just on a particular branch</li>
+    </ul>
+
+    <p>These fixes were incorporated into subsequent versions (v8, v9), which tightened the n-pole generalization section, added the general cancellation condition <span class="inline-math">B'/B + R'/(2R) + 2A = 0</span>, the observation that <span class="inline-math">f(z)</span> is auxiliary (it cancels from both <span class="inline-math">B√R</span> and <span class="inline-math">B²R</span>), the one-parameter family <span class="inline-math">r_c(z)</span>, and refined the Wronskian and linear independence presentations.</p>
+  </section>
+
+  <!-- 7. VERSION ITERATION -->
+  <section id="iteration">
+    <h2><span class="num">7</span> Version Iteration: v2 through v9</h2>
+
+    <p>The paper went through 9 major versions over ~2 days of intensive work. Here's the progression:</p>
+
+    <div class="version-grid">
+      <div class="version-card"><div class="ver">v2</div><div class="desc">Initial HTML/PDF rendering with MathJax</div></div>
+      <div class="version-card"><div class="ver">v3</div><div class="desc">Rebuilt with all 10 reviewer fixes; clean proofs</div></div>
+      <div class="version-card"><div class="ver">v4</div><div class="desc">First LaTeX compile attempt</div></div>
+      <div class="version-card"><div class="ver">v5</div><div class="desc">LaTeX formatting fixes</div></div>
+      <div class="version-card"><div class="ver">v6</div><div class="desc">Compiled with tectonic (LaTeX→PDF)</div></div>
+      <div class="version-card"><div class="ver">v7</div><div class="desc">Deep proof review target; subagent verified math</div></div>
+      <div class="version-card"><div class="ver">v8</div><div class="desc">Review fixes applied; n-pole section tightened</div></div>
+      <div class="version-card final"><div class="ver">v9</div><div class="desc">Final version — published to GitHub</div></div>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item milestone">
+        <div class="timeline-date">July 1</div>
+        <div class="timeline-title">Original derivation sent to Mark Kruelle</div>
+        <div class="timeline-body">Core mathematical construction shared via email — the two-pole ansatz, Riccati verification, and Liouvillian solutions.</div>
+      </div>
+      <div class="timeline-item warning">
+        <div class="timeline-date">July 2–3</div>
+        <div class="timeline-title">Reconstruction from partial sources — errors found</div>
+        <div class="timeline-body">An attempt to rebuild the derivation from partial memory introduced algebraic errors. Original email forwarded back by Skip on July 3 to restore the correct version.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">July 3, ~00:00</div>
+        <div class="timeline-title">v2: Initial rendering with MathJax</div>
+        <div class="timeline-body">First HTML/PDF rendering. MathJax used for equation display.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">July 3, ~00:18</div>
+        <div class="timeline-title">v3: Full reviewer fixes applied</div>
+        <div class="timeline-body">Clean A'/A²/B²R proof, SymPy separated from formal proofs, n-pole corrected, B=C restricted to f=1, novelty scoped, y₂ from conjugate, title cleaned, linear independence tightened, Kovacic comparison defined.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">July 3, ~11:51</div>
+        <div class="timeline-title">v4–v5: LaTeX compilation</div>
+        <div class="timeline-body">Transition from HTML/MathJax to proper LaTeX source. Formatting and equation rendering fixes.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">July 3, ~12:33</div>
+        <div class="timeline-title">v6: Compiled with tectonic</div>
+        <div class="timeline-body">LaTeX → PDF compilation using tectonic engine. First clean PDF build.</div>
+      </div>
+      <div class="timeline-item milestone">
+        <div class="timeline-date">July 3, ~12:40</div>
+        <div class="timeline-title">Multi-model review pipeline set up</div>
+        <div class="timeline-body">Younique established the 4-model review pipeline: glm-5.2 (prose), qwen3-coder (LaTeX), kimi-k2 (proofs), deepseek-v3.1 (adversarial). Rule: no single model both writes and approves the math.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">July 3, ~12:43</div>
+        <div class="timeline-title">v7: Deep proof review target</div>
+        <div class="timeline-body">Subagent spawned to review v7. Read full LaTeX source, verified math with SymPy, checked irreducibility, Wronskian, linear independence. Verdict: PASS WITH MINOR FIXES.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">July 3, ~13:04</div>
+        <div class="timeline-title">v8: Review fixes applied</div>
+        <div class="timeline-body">N-pole section tightened, irrational cancellation condition stated explicitly, Wronskian computation refined, linear independence as algebraic function equality.</div>
+      </div>
+      <div class="timeline-item success">
+        <div class="timeline-date">July 3, ~14:06</div>
+        <div class="timeline-title">v9: Final version</div>
+        <div class="timeline-body">Final LaTeX source (20,635 bytes) and compiled PDF (102,337 bytes). This is the version that would be published to GitHub.</div>
+      </div>
+      <div class="timeline-item success">
+        <div class="timeline-date">July 15</div>
+        <div class="timeline-title">Published to GitHub</div>
+        <div class="timeline-body">Repository created at github.com/pottertech/inverse-riccati-liouvillian-ode with final LaTeX, PDF, SymPy verification code, and automated CI verification workflow.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. PUBLISHING -->
+  <section id="publishing">
+    <h2><span class="num">8</span> GitHub Publishing</h2>
+
+    <p>On <strong>July 15, 2026</strong>, the paper was published to GitHub. The publishing session involved several steps:</p>
+
+    <ol style="padding-left: 20px; margin: 16px 0;">
+      <li style="margin-bottom: 10px;"><strong>Locate the final source</strong> — The latest LaTeX source (v9) was identified as the canonical version. The GitHub account was confirmed as <code>pottertech</code> (not <code>pottersquill</code> as an external reference had suggested).</li>
+      <li style="margin-bottom: 10px;"><strong>Create the verification script</strong> — A standalone <code>verify.py</code> was written from the SymPy code embedded in the paper's LaTeX source, providing independent reproducibility.</li>
+      <li style="margin-bottom: 10px;"><strong>Run SymPy verification</strong> — All verification checks passed: <span class="inline-math">r(z)</span> confirmed, Riccati equation satisfied for both branches, minimal polynomial degree 2, ODE checks for both solutions, Wronskian nonzero.</li>
+      <li style="margin-bottom: 10px;"><strong>Structure the repository</strong> — Paper source, compiled PDF, verification code, references, citation metadata, and CI workflow.</li>
+      <li style="margin-bottom: 10px;"><strong>Create the repo and push</strong> — Private GitHub repository created and all files pushed.</li>
+    </ol>
+
+    <div class="repo-card">
+      <div class="repo-name">pottertech/inverse-riccati-liouvillian-ode</div>
+      <div class="repo-desc">An Inverse Riccati Construction of Second-Order Linear ODEs from Degree-2 Algebraic Extensions — preprint by Kevin D. Potter</div>
+      <div class="repo-structure">
+two-pole-liouvillian-ode/<br>
+├── README.md<br>
+├── LICENSE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(MIT)<br>
+├── CITATION.cff&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(citation metadata)<br>
+├── paper/<br>
+│&nbsp;&nbsp;&nbsp;├── ODE-Research-Paper-final.tex<br>
+│&nbsp;&nbsp;&nbsp;└── ODE-Research-Paper-final.pdf<br>
+├── code/<br>
+│&nbsp;&nbsp;&nbsp;└── verify.py&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(SymPy verification)<br>
+├── references/<br>
+└── .github/workflows/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── verify.yml&nbsp;&nbsp;&nbsp;&nbsp;(automated CI verification on push)
+      </div>
+      <a class="repo-link" href="https://github.com/pottertech/inverse-riccati-liouvillian-ode" target="_blank">→ View on GitHub</a>
+    </div>
+
+    <p>The repository includes an automated GitHub Actions workflow (<code>verify.yml</code>) that runs the SymPy verification script on every push, ensuring that any future changes are automatically checked against the paper's mathematical claims.</p>
+
+    <p>The paper is described as a <em>preprint that has not yet been peer reviewed</em>, and is released under an MIT license.</p>
+  </section>
+
+  <!-- 9. LESSONS -->
+  <section id="lessons">
+    <h2><span class="num">9</span> Lessons Learned</h2>
+
+    <div class="callout lesson">
+      <span class="label">Lesson 1: Never fabricate math from partial sources</span>
+      <p>The single most important lesson from this project. When reconstructing the derivation from partial memory, algebraic errors crept in that would have been embarrassing in a published paper.</p>
+
+      <p><strong>Always verify algebra against the Riccati equation before output. Ask for the original if reconstructing.</strong> The research file was saved with the header "Correct Construction (DO NOT LOSE THIS)" as a permanent reminder.</p>
+    </div>
+
+    <div class="callout lesson">
+      <span class="label">Lesson 2: Separate computational verification from formal proofs</span>
+      <p>SymPy verification is powerful for checking that the math is correct, but it is not a proof. The paper keeps the SymPy code in a separate "Computational Verification" section, explicitly stated as "provided for reproducibility and is separate from the formal proofs." This maintains mathematical rigor while providing computational confidence.</p>
+    </div>
+
+    <div class="callout lesson">
+      <span class="label">Lesson 3: No single model both writes and approves</span>
+      <p>The multi-model review pipeline was essential for catching issues that any single model would miss. Each model was assigned a specific review dimension (prose, LaTeX, proofs, adversarial), and the rule that no model both writes and approves the same mathematical claim prevented self-reinforcing blind spots.</p>
+    </div>
+
+    <div class="callout lesson">
+      <span class="label">Lesson 4: Scope your novelty claims carefully</span>
+      <p>The original draft claimed the construction was "novel." The review process corrected this to "not found in the standard references consulted" — a much weaker but defensible claim. In mathematics, proving novelty requires exhaustive literature review; claiming absence from specific consulted references is honest and sufficient for a preprint.</p>
+    </div>
+
+    <div class="callout lesson">
+      <span class="label">Lesson 5: Version aggressively, but preserve the correct version</span>
+      <p>Nine versions in two days is aggressive, but each version had a specific purpose (reviewer fixes, LaTeX compilation, proof tightening). The key discipline was preserving the verified derivation in a dedicated research file (<code>memory/research/2026-07-03-ode-paper-derivation.md</code>) so that any version could be rebuilt from the ground truth.</p>
+    </div>
+
+    <div class="callout lesson">
+      <span class="label">Lesson 6: Automated verification is a publishing requirement</span>
+      <p>The GitHub repository includes a CI workflow that runs SymPy verification on every push. For a mathematical paper with computational claims, automated verification should be part of the publishing process — not an afterthought.</p>
+    </div>
+  </section>
+
+  <!-- 10. AUTHOR + DISCLOSURE -->
+  <section id="authors">
+    <h2><span class="num">10</span> Author &amp; AI Assistance Disclosure</h2>
+
+    <p>The paper is authored by:</p>
+
+    <div class="authors">
+      <div class="author">
+        <div class="name">Kevin D. Potter</div>
+        <div class="role">Saint Leo Alumni<br>Potter's Quill Publishing</div>
+      </div>
+    </div>
+
+    <p>The mathematical construction was developed through correspondence between Kevin D. Potter and Mark F. Kruelle (Yale alumnus), with computational verification, LaTeX typesetting, and review coordination conducted by Brodie Foxworth (AI research assistant at Potter's Quill Publishing). The multi-model review pipeline and GitHub publishing process were managed by Kevin D. Potter.</p>
+
+    <div class="callout info">
+      <span class="label">Acknowledgments (from the paper)</span>
+      <p>The author thanks Mark F. Kruelle for formulating the initial mathematical question and for reviewing the mathematical direction of the work.</p>
+    </div>
+
+    <div class="callout">
+      <span class="label">AI Assistance Disclosure (from the paper)</span>
+      <p>The author used Brodie Foxworth, an AI scientific research agent built by Kevin D. Potter, to assist with symbolic exploration, draft organization, LaTeX preparation, computational-check workflow support, and editorial review. <strong>Brodie Foxworth is not an author.</strong> The author reviewed the mathematical claims, computations, citations, and conclusions, and accepts full responsibility for the manuscript.</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="footer">
+  <p>This document was produced by Brodie Foxworth 🦊 for Potter's Quill Publishing.</p>
+  <p>Source: <a href="https://github.com/pottertech/inverse-riccati-liouvillian-ode">github.com/pottertech/inverse-riccati-liouvillian-ode</a> &nbsp;·&nbsp; Generated July 16, 2026</p>
+</div>
+
+</body>
+</html>

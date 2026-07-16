@@ -9,6 +9,7 @@ verification code for the paper by Kevin D. Potter.
 
 - `paper/` — manuscript source (`ODE-Research-Paper-final.tex`) and compiled PDF
 - `code/verify.py` — SymPy verification of key identities in the paper
+- `docs/research-journey.html` — narrative account of the research process from conception to publication
 - `references/` — reference notes
 - `CITATION.cff` — citation metadata
 - `.github/workflows/verify.yml` — automated verification on push
