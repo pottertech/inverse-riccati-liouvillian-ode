@@ -9,7 +9,10 @@ verification code for the paper by Kevin D. Potter.
 
 - `paper/` — manuscript source (`ODE-Research-Paper-final.tex`) and compiled PDF
 - `code/verify.py` — SymPy verification of key identities in the paper
-- `docs/research-journey.html` — narrative account of the research process from conception to publication
+- `docs/` — narrative account of the research process from conception to publication
+  - `research-journey.html` — styled HTML version ([view online](https://pottertech.github.io/inverse-riccati-liouvillian-ode/research-journey.html))
+  - `research-journey.md` — Markdown version
+  - `research-journey.pdf` — PDF version for download/printing
 - `references/` — reference notes
 - `CITATION.cff` — citation metadata
 - `.github/workflows/verify.yml` — automated verification on push
