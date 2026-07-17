@@ -34,8 +34,8 @@
 
 % Author metadata
 \title{An Inverse Riccati Construction of Second-Order Linear ODEs from Degree-2 Algebraic Extensions}
-\author{Kevin D. Potter\footnote{Saint Leo University alumnus; Potter's Quill Publishing; development and operation of the Brodie Foxworth AI research agent.}}
-\date{Revised July 2026}
+\author{Mark F. Kruelle\footnote{Yale University alumnus; Formulated the initial mathematical question and reviewed the mathematical direction of the work.} \and Kevin D. Potter\footnote{Saint Leo University alumnus; Potter's Quill Publishing; development and operation of the Brodie Foxworth AI research agent.}}
+\date{Revised July 17, 2026}
 
 \begin{document}
 
@@ -338,16 +338,16 @@ We have presented a systematic construction of second-order linear ODEs with deg
 \begin{align*}
 y_1 &= [z(z-1)]^{1/4}[2z-1 + 2\sqrt{z(z-1)}]^{1/2} \\
 y_2 &= [z(z-1)]^{1/4}[2z-1 - 2\sqrt{z(z-1)}]^{1/2}
-\end{align}
+\end{align*}
 The construction was verified by: (i) direct computation of \(r(z)\) from \(-(A' + A^2 + B^2R)\); (ii) proof that \(s\) has algebraic degree exactly 2 via its minimal polynomial; (iii) proof of linear independence via the nonconstant ratio \(y_1/y_2\) and constant nonzero Wronskian \(W=\pm 1\); and (iv) supporting SymPy computational checks.
 
 The \(n\)-pole generalization extends the framework to arbitrary numbers of poles with odd residue parameters. The auxiliary function \(f(z)\) enters the parametrization but cancels from the resulting ODE coefficient; the essential parameters are the pole locations, the odd integers \(n_i\), and the constant \(c\). Further exploration of the resulting multi-pole ODE families is a natural direction for future work.
 
-\section*{Acknowledgments}
-The author thanks Mark F. Kruelle for formulating the initial mathematical question and for reviewing the mathematical direction of the work.
+\section*{Author Contributions}
+Mark F. Kruelle formulated the initial mathematical question and reviewed the mathematical direction of the work. Kevin D. Potter developed and operated the Brodie Foxworth AI scientific research agent, directed the computational and drafting workflow, reviewed the mathematical claims, and prepared the manuscript. Both human authors reviewed and approved the final manuscript and accept responsibility for its contents.
 
 \section*{AI Assistance Disclosure}
-The author used Brodie Foxworth, an AI scientific research agent built by Kevin D. Potter, to assist with symbolic exploration, draft organization, LaTeX preparation, computational-check workflow support, and editorial review. Brodie Foxworth is not an author. The author reviewed the mathematical claims, computations, citations, and conclusions, and accepts full responsibility for the manuscript.
+The authors used Brodie Foxworth, an AI scientific research agent built by Kevin D. Potter, to assist with symbolic exploration, draft organization, LaTeX preparation, computational-check workflow support, and editorial review. Brodie Foxworth is not an author. The human authors reviewed the mathematical claims, computations, citations, and conclusions, and accept full responsibility for the manuscript.
 
 \newpage
 
